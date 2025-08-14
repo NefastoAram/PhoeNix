@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/stefano/Documents/MySkynet/src/phoenix/server
-ExecStart=/home/stefano/Documents/MySkynet/src/phoenix/server/phoenixenv/bin/python phoenix_server.py
+WorkingDirectory=/home/stefano/Documents/MySkynet/src/PhoeNix/server
+ExecStart=/home/stefano/Documents/MySkynet/src/PhoeNix/server/phoenixenv/bin/python phoenix_server.py
 Restart=always
 User=stefano
 
