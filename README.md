@@ -13,7 +13,7 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
 1. Clone the repository:
    ```bash
    git clone <repo-url>
-   cd phoenix
+   cd PhoeNix/server
    ```
 2. Create and activate the Python environment, then install requirements:
    ```bash
@@ -36,7 +36,8 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
 
 ## Usage
 - Access the web interface at `http://<server-IP>:5000` from any browser.
-- View hardware metrics and system info in real time.
+- View hardware metrics and system info in real time from your device in kiosk mode
+
 
 ## Structure
    - `server/phoenix_server.py`: Flask backend/API for hardware metrics
@@ -48,10 +49,10 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
 ## Requirements
 - Python 3
 - Flask, psutil, requests (vedi `server/requirements.txt`)
-- Linux (tested on Ubuntu)
+- Linux (tested on Ubuntu and ASUS Zenfone 2 as display)
 
 ## Screenshot
-![Phoenix System Monitor Example](display_example.png)
+![Phoenix System Monitor Example](display_example.png)(display_example_zenfone.png)
 
 ## License
 MIT
