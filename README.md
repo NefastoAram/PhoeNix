@@ -52,7 +52,8 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
 - Linux (tested on Ubuntu and ASUS Zenfone 2 as display)
 
 ## Screenshot
-![Phoenix System Monitor Example](display_example.png)(display_example_zenfone.png)
+![Phoenix System Monitor Example](display_example.png)
+![Phoenix System Monitor Zenfone Example](display_example_zenfone.png)
 
 ## License
 MIT
