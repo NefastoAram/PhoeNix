@@ -1,0 +1,13 @@
+[Unit]
+Description=Phoenix Monitor Flask Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/stefano/Documents/MySkynet/src/phoenix/server
+ExecStart=/home/stefano/Documents/MySkynet/src/phoenix/server/phoenixenv/bin/python phoenix_server.py
+Restart=always
+User=stefano
+
+[Install]
+WantedBy=multi-user.target
