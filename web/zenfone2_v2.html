@@ -384,10 +384,10 @@
                         var deltaRecv = data.net_recv - lastNetRecv;
                         var sentMBps = deltaSent > 0 ? (deltaSent / 1024 / 1024) / deltaTime : 0;
                         var recvMBps = deltaRecv > 0 ? (deltaRecv / 1024 / 1024) / deltaTime : 0;
-                        updateNetRxGauge(sentMBps);
-                        updateNetTxGauge(recvMBps);
+                        updateNetRxGauge(recvMBps);
+                        updateNetTxGauge(sentMBps);
                     } else {
-                            // First run: gauge at zero
+                        // First run: gauge at zero
                         updateNetRxGauge(0);
                         updateNetTxGauge(0);
                     }
@@ -403,6 +403,7 @@
                     updateNetTxGauge(0);
                     var now = Date.now();
                     if (now - lastAlertTime > 10000) {
+                        console.log('Unable to reach PhoeNix server');
                         alert('Unable to reach PhoeNix server!');
                         lastAlertTime = now;
                     }
