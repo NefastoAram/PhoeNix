@@ -24,9 +24,8 @@ Thumbs.db
 # APK
 *.apk
 
-# Images
-*.png
-*.gif
+
+
 
 # Others
 *.bak
