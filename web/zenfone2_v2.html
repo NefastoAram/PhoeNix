@@ -1,0 +1,420 @@
+<!-- 
+ This page is optimized for Asus Zenfone 2, in kiosk mode, landscape.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="screen-orientation" content="landscape">
+    <meta charset="UTF-8">
+    <title>Phoenix Custom Interface for Zenfone2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            width: 96%;
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 2.2em;
+            margin: 0 0 20px 0;
+            text-align: center;
+            word-break: break-word;
+        }
+        .data {
+            margin-bottom: 2px;
+            padding: 8px;
+            background: rgba(51,51,51,0.95);
+            border-radius: 8px;
+        }
+        .label {
+            display: inline-block;
+            width: 110px;
+            white-space: nowrap;
+        }
+        .hostname-value {
+            color: #00eaff;
+            background: rgba(51,51,51,0.95);
+            text-shadow: 0 0 6px #00eaff, 0 0 2px #222;
+            letter-spacing: 1px;
+            font-size: 1.1em;
+        }
+        .load-value {
+            display: inline-block;
+            min-width: 60px;
+            text-align: right;
+        }
+        .main-row {
+            width: 100vw;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .date-time-hour {
+            font-size: 2.2em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .date-time-day {
+            font-size: 1.1em;
+            color: #eee;
+            opacity: 0.8;
+        }
+        .left-section {
+            float: left;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        .right-section {
+            float: left;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        @media screen and (max-width: 900px) {
+            .left-section, .right-section {
+                float: none;
+                width: 100%;
+            }
+        }
+        @media screen and (orientation: landscape) {
+            .container {
+                max-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="bg-gif" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;">
+        <img src="images/hal9000.gif" alt="HAL 9000" style="border-radius:35%; width:90%; height:90%;" />
+    </div>
+    <div style="position:relative;z-index:1;">
+        <div class="main-row">
+            <div class="left-section">
+                <div class="container" style="padding-top:0;text-align:center;">
+                    <div style="width:100%;display:flex;justify-content:center;align-items:center;margin-bottom:8px; margin-top: 2px;">
+                        <div class="gauge-container" style="margin:0 4px;">
+                                <div id="cpu-gauge" style="height:140px;width:160px;background:rgba(51,51,51,0.8);margin-left:0;"></div>
+                        </div>
+                        <div class="gauge-container" style="margin:0 4px;">
+                            <div id="ram-gauge" style="height:140px;width:160px;background:rgba(51,51,51,0.8);margin-left:0;"></div>
+                        </div>
+                        <div class="gauge-container" style="margin:0 4px;">
+                            <div id="disk-gauge" style="height:140px;width:160px;background:rgba(51,51,51,0.8);margin-left:0;"></div>
+                        </div>
+                    </div>
+                    <!-- Riga LOAD -->
+                    <div style="width:100%;display:flex;justify-content:center;align-items:center;margin-bottom:8px;">
+                        <div class="gauge-container" style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:16px;">
+                            <div id="load-row" style="font-size:1em;font-weight:bold;color:#fff;min-width:120px;text-align:left;background:rgba(51,51,51,0.8);border-radius:8px;padding:8px;"></div>
+                            <div id="net-gauges" style="display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:center;background:rgba(51,51,51,0.8);border-radius:8px;">
+                                <div style="display:flex;flex-direction:column;align-items:center;">
+                                    <div id="net-rx-gauge" style="height:80px;width:95px;"></div>
+                                    <div id="net-rx-mbps" style="color:#00eaff;font-size:1em;margin-top:2px;">&nbsp;</div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;align-items:center;">
+                                    <div id="net-tx-gauge" style="height:80px;width:95px;"></div>
+                                    <div id="net-tx-mbps" style="color:#00eaff;font-size:1em;margin-top:2px;">&nbsp;</div>
+                                </div>
+                            </div>
+                            <div id="sys-info-row" style="font-size:1em;font-weight:bold;color:#fff;min-width:120px;text-align:left;background:rgba(51,51,51,0.8);border-radius:8px;padding:8px;"></div>
+                        </div>
+                    </div>
+                    <!-- Riga data e ora -->
+                    <div id="datetime-row" style="width:100%;font-size:1.8em;font-weight:bold;color:#fff;text-align:left;background:rgba(51,51,51,0);border-radius:8px;margin-top:0px;"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!-- JustGage & Raphael.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.2.2/justgage.min.js"></script>
+    <script>
+    var lastAlertTime = 0;
+        function updateDateTime() {
+            var now = new Date();
+            var giorni = ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab']; // Giorni della settimana in italiano
+            var giornoSettimana = giorni[now.getDay()];
+            var day = (now.getDate()<10?'0':'') + now.getDate();
+            var month = (now.getMonth()+1<10?'0':'') + (now.getMonth()+1);
+            var year = now.getFullYear();
+            var hours = (now.getHours()<10?'0':'') + now.getHours();
+            var minutes = (now.getMinutes()<10?'0':'') + now.getMinutes();
+            var seconds = (now.getSeconds()<10?'0':'') + now.getSeconds();
+            var ora = hours + ':' + minutes + ':' + seconds;
+            var data = giornoSettimana + ' ' + day + '/' + month + '/' + year;
+            document.getElementById('datetime-row').innerHTML =
+                '<div style="display:flex;align-items:center;justify-content:center;gap:16px;">' +
+                    '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
+                        '<span style="font-size:1.8em;font-weight:bold;">' + ora + '</span>' +
+                        '<span style="font-size:1em">' + data + '</span>' +
+                    '</div>' +
+                    '<img src="images/super-tux.gif" alt="Tux" style="height:80px;margin-left:12px;border-radius:8px;object-fit:contain;align-self:center;" />' +
+                '</div>';
+        }
+    var cpuGauge = null;
+    var ramGauge = null;
+    var diskGauge = null;
+    var netRxGauge = null;
+    var netTxGauge = null;
+    // Variables for MB/s calculation
+    var lastNetSent = null;
+    var lastNetRecv = null;
+    var lastNetTime = null;
+        function updateGauge(cpuPercent) {
+            if (!cpuGauge) {
+                cpuGauge = new JustGage({
+                    id: "cpu-gauge",
+                    value: parseFloat(cpuPercent.toFixed(2)),
+                    min: 0,
+                    max: 100,
+                    title: "CPU",
+                    label: "%",
+                    pointer: true,
+                    gaugeWidthScale: 0.7,
+                    customSectors: [
+                        {color: "#4caf50", lo: 0, hi: 40},
+                        {color: "#ffe600", lo: 41, hi: 70},
+                        {color: "#ff7f00", lo: 71, hi: 90},
+                        {color: "#ff0000", lo: 91, hi: 100}
+                    ],
+                    valueFontColor: "#fff",
+                    decimals: 2
+                });
+            } else {
+                cpuGauge.refresh(parseFloat(cpuPercent.toFixed(2)));
+            }
+        }
+        function updateRamGauge(ramPercent) {
+            if (!ramGauge) {
+                ramGauge = new JustGage({
+                    id: "ram-gauge",
+                    value: parseFloat(ramPercent.toFixed(2)),
+                    min: 0,
+                    max: 100,
+                    title: "RAM",
+                    label: "%",
+                    pointer: true,
+                    gaugeWidthScale: 0.7,
+                    customSectors: [
+                        {color: "#00eaff", lo: 0, hi: 60},
+                        {color: "#ffe600", lo: 61, hi: 80},
+                        {color: "#ff7f00", lo: 81, hi: 95},
+                        {color: "#ff0000", lo: 96, hi: 100}
+                    ],
+                    valueFontColor: "#fff",
+                    decimals: 2
+                });
+            } else {
+                ramGauge.refresh(parseFloat(ramPercent.toFixed(2)));
+            }
+        }
+        function updateDiskGauge(diskPercent) {
+            if (!diskGauge) {
+                diskGauge = new JustGage({
+                    id: "disk-gauge",
+                    value: parseFloat(diskPercent.toFixed(2)),
+                    min: 0,
+                    max: 100,
+                    title: "DISK",
+                    label: "%",
+                    pointer: true,
+                    gaugeWidthScale: 0.7,
+                    customSectors: [
+                        {color: "#4caf50", lo: 0, hi: 70},
+                        {color: "#ffe600", lo: 71, hi: 85},
+                        {color: "#ff7f00", lo: 86, hi: 95},
+                        {color: "#ff0000", lo: 96, hi: 100}
+                    ],
+                    valueFontColor: "#fff",
+                    decimals: 2
+                });
+            } else {
+                diskGauge.refresh(parseFloat(diskPercent.toFixed(2)));
+            }
+        }
+        function updateNetRxGauge(rxPercent) {
+            // Always show at least 0.1 MB/s if >0 and <0.1
+            var shownValue = (rxPercent > 0 && rxPercent < 0.1) ? 0.1 : rxPercent;
+            if (!netRxGauge) {
+                netRxGauge = new JustGage({
+                    id: "net-rx-gauge",
+                    value: parseFloat(shownValue.toFixed(2)),
+                    min: 0,
+                    max: 20,
+                    title: "NET RX",
+                    label: "MB/s",
+                    pointer: true,
+                    gaugeWidthScale: 0.7,
+                    customSectors: [
+                        {color: "#4caf50", lo: 0, hi: 5},
+                        {color: "#ffe600", lo: 5.01, hi: 10},
+                        {color: "#ff7f00", lo: 10.01, hi: 15},
+                        {color: "#ff0000", lo: 15.01, hi: 20}
+                    ],
+                    valueFontColor: "#fff",
+                    decimals: 2
+                });
+            } else {
+                netRxGauge.refresh(parseFloat(shownValue.toFixed(2)));
+            }
+        }
+        function updateNetTxGauge(txPercent) {
+            // Mostra almeno 0.1 MB/s se >0 e <0.1
+            var shownValue = (txPercent > 0 && txPercent < 0.1) ? 0.1 : txPercent;
+            if (!netTxGauge) {
+                netTxGauge = new JustGage({
+                    id: "net-tx-gauge",
+                    value: parseFloat(shownValue.toFixed(2)),
+                    min: 0,
+                    max: 20,
+                    title: "NET TX",
+                    label: "MB/s",
+                    pointer: true,
+                    gaugeWidthScale: 0.7,
+                    customSectors: [
+                        {color: "#4caf50", lo: 0, hi: 5},
+                        {color: "#ffe600", lo: 5.01, hi: 10},
+                        {color: "#ff7f00", lo: 10.01, hi: 15},
+                        {color: "#ff0000", lo: 15.01, hi: 20}
+                    ],
+                    valueFontColor: "#fff",
+                    decimals: 2
+                });
+            } else {
+                netTxGauge.refresh(parseFloat(shownValue.toFixed(2)));
+            }
+        }
+        function fetchCpu() {
+            $.ajax({
+                url: '/api/status',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // sys-info-row section
+                    if (data && typeof data.hostname !== 'undefined' && typeof data.ip !== 'undefined' && typeof data.os !== 'undefined' && typeof data.uptime_seconds !== 'undefined') {
+                        var sysinfo = '';
+                        sysinfo += '<div style="display:flex;flex-direction:column;gap:2px;">';
+                        sysinfo += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                            '<span class="label" style="width:90px;">Hostname:</span>' +
+                            '<span class="hostname-value" style="margin-left:4px;">' + data.hostname + '</span>' +
+                        '</div>';
+                        var osShort = (typeof data.os === 'string') ? data.os.split(' ')[0] : '';
+                        sysinfo += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                            '<span class="label" style="width:90px;">OS:</span>' +
+                            '<span style="margin-left:4px;">' + osShort + '</span>' +
+                        '</div>';
+                        sysinfo += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                            '<span class="label" style="width:90px;">IP:</span>' +
+                            '<span style="margin-left:4px;">' + data.ip + '</span>' +
+                        '</div>';
+                        var uptime = data.uptime_seconds;
+                        var days = Math.floor(uptime / 86400);
+                        var hours = Math.floor((uptime % 86400) / 3600);
+                        var minutes = Math.floor((uptime % 3600) / 60);
+                        var seconds = uptime % 60;
+                        var uptimeStr = (days > 0 ? days + 'd ' : '') + (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                        sysinfo += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                            '<span class="label" style="width:90px;">Uptime:</span>' +
+                            '<span style="margin-left:4px;">' + uptimeStr + '</span>' +
+                        '</div>';
+                        sysinfo += '</div>';
+                        document.getElementById('sys-info-row').innerHTML = sysinfo;
+                    }
+                    if (data && typeof data.cpu_percent !== 'undefined') {
+                        updateGauge(data.cpu_percent);
+                    }
+                    if (data && typeof data.ram_percent !== 'undefined') {
+                        updateRamGauge(data.ram_percent);
+                    }
+                    if (data && typeof data.disk_percent !== 'undefined') {
+                        updateDiskGauge(data.disk_percent);
+                    }
+                    // LOAD average
+                        if (typeof data.load_avg_1m !== 'undefined' && typeof data.load_avg_5m !== 'undefined' && typeof data.load_avg_15m !== 'undefined') {
+                            var html = '';
+                            html += '<div style="display:flex;flex-direction:column;gap:4px;">';
+                            // CPU temperature
+                            if (typeof data.cpu_temp !== 'undefined' && data.cpu_temp !== null) {
+                                var tempColor = '#4caf50';
+                                if (data.cpu_temp >= 70) tempColor = '#ffe600';
+                                if (data.cpu_temp >= 85) tempColor = '#ff7f00';
+                                if (data.cpu_temp >= 100) tempColor = '#ff0000';
+                                html += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                                    '<span class="label">CPU Temp:</span>' +
+                                    '<span style="color:' + tempColor + ';text-align:right;margin-left:10px;">' + data.cpu_temp.toFixed(1) + ' °C</span>' +
+                                    '</div>';
+                            }
+                            var loads = [
+                                {label: 'Load Avg (1m):', value: data.load_avg_1m},
+                                {label: 'Load Avg (5m):', value: data.load_avg_5m},
+                                {label: 'Load Avg (15m):', value: data.load_avg_15m}
+                            ];
+                            for (var i=0; i<loads.length; i++) {
+                                var val = loads[i].value;
+                                var color = '#4caf50';
+                                if (val >= 2) color = '#ffe600';
+                                if (val >= 4) color = '#ff7f00';
+                                if (val >= 8) color = '#ff0000';
+                                html += '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                                    '<span class="label">' + loads[i].label + '</span>' +
+                                    '<span style="color:' + color + ';text-align:right;margin-left:10px;">' + val.toFixed(3) + '</span>' +
+                                    '</div>';
+                            }
+                            html += '</div>';
+                            document.getElementById('load-row').innerHTML = html;
+                    }
+                    // Usa net_sent e net_recv per calcolare MB/s lato frontend
+                    var now = Date.now();
+                    if (lastNetTime !== null && lastNetSent !== null && lastNetRecv !== null) {
+                        var deltaTime = (now - lastNetTime) / 1000.0;
+                        var deltaSent = data.net_sent - lastNetSent;
+                        var deltaRecv = data.net_recv - lastNetRecv;
+                        var sentMBps = deltaSent > 0 ? (deltaSent / 1024 / 1024) / deltaTime : 0;
+                        var recvMBps = deltaRecv > 0 ? (deltaRecv / 1024 / 1024) / deltaTime : 0;
+                        updateNetRxGauge(sentMBps);
+                        updateNetTxGauge(recvMBps);
+                    } else {
+                            // First run: gauge at zero
+                        updateNetRxGauge(0);
+                        updateNetTxGauge(0);
+                    }
+                    lastNetSent = data.net_sent;
+                    lastNetRecv = data.net_recv;
+                    lastNetTime = now;
+                },
+                error: function() {
+                    updateGauge(0);
+                    updateRamGauge(0);
+                    updateDiskGauge(0);
+                    updateNetRxGauge(0);
+                    updateNetTxGauge(0);
+                    var now = Date.now();
+                    if (now - lastAlertTime > 10000) {
+                        alert('Unable to reach PhoeNix server!');
+                        lastAlertTime = now;
+                    }
+                }
+            });
+        }
+        $(document).ready(function() {
+            fetchCpu();
+            setInterval(fetchCpu, 3000);
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
+</body>
+</html>
