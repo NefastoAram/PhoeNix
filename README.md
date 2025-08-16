@@ -35,7 +35,9 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
    ```
 
 ## Usage
-- Access the web interface at `http://<server-IP>:5000` from any browser.
+- Access the API interface at `http://<server-IP>:5000`
+- Configure nginx (resources)
+- Open device browser on http://<server-IP>/index.html
 - View hardware metrics and system info in real time from your device in kiosk mode
 
 
