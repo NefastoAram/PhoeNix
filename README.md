@@ -42,11 +42,12 @@ Reuse old devices as hardware monitors (smartphone and tables) as external Displ
 
 
 ## Structure
-   - `server/phoenix_server.py`: Flask backend/API for hardware metrics
-   - `web/index.html`: lightweight web frontend
-   - `bin/phoenix.sh`: systemd service manager script
-   - `bin/phoenix.service`: systemd service file
-   - `web/images/hal9000.gif`: animated background
+- `server/phoenix_server.py`: Flask backend/API for hardware metrics
+- `web/index.html`: lightweight web frontend
+- `bin/phoenix.sh`: systemd service manager script
+- `bin/phoenix.service`: systemd service file
+- `web/images/hal9000.gif`: animated background
+- `resources`: nginx configuration for reverse proxy and exposing the web page
 
 ## Requirements
 - Python 3
